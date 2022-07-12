@@ -41,6 +41,7 @@ proc create_new_project {project target top_module} {
     rtl/clock_rst.v
     rtl/mouse.v
     rtl/draw_bug.v
+    rtl/image_rom.v
     }
     
     # Specify vhdl design files location      -- EDIT
@@ -52,9 +53,9 @@ proc create_new_project {project target top_module} {
 }
     
     # Specify files for memory initialization -- EDIT
-    #read_mem {
-    #    rtl/image_rom.data
-    #}
+    read_mem {
+        rtl/bug.dat
+    }
 
     # Specify simulation files location       -- EDIT
     add_files -fileset sim_1 {
@@ -157,3 +158,4 @@ if {$argc == 1} {
     usage
     exit 1
 }
+
