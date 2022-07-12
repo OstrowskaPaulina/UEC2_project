@@ -50,11 +50,11 @@ module main (
     .S(1'b0)
   );
 
-  wire [10:0] vcount, hcount;
+  wire [11:0] vcount, hcount;
   wire vsync, hsync;
   wire vblnk, hblnk;
 
-  wire [10:0] vcount_out_bg, hcount_out_bg, vcount_out_rec, hcount_out_rec, vcount_out_disp, hcount_out_disp;
+  wire [11:0] vcount_out_bg, hcount_out_bg, vcount_out_rec, hcount_out_rec, vcount_out_disp, hcount_out_disp;
   wire vsync_out_bg, hsync_out_bg, vsync_out_rec, hsync_out_rec, vsync_out_disp, hsync_out_disp;
   wire vblnk_out_bg, hblnk_out_bg, vblnk_out_rec, hblnk_out_rec,vblnk_out_disp, hblnk_out_disp;
   wire [11:0] rgb_out_bg, rgb_out_rec, rgb_out_disp;

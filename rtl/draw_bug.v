@@ -3,19 +3,19 @@
 module draw_bug(
   input wire pclk,
   input wire reset,
-  input wire [10:0] vcount_in,
+  input wire [11:0] vcount_in,
   input wire vsync_in,
   input wire vblnk_in,
-  input wire [10:0] hcount_in,
+  input wire [11:0] hcount_in,
   input wire hsync_in,
   input wire hblnk_in,
   input wire [11:0] rgb_in,
   input wire [11:0] x_bugpos,
   input wire [11:0] y_bugpos,
-  output reg [10:0] vcount_out,
+  output reg [11:0] vcount_out,
   output reg vsync_out,
   output reg vblnk_out,
-  output reg [10:0] hcount_out,
+  output reg [11:0] hcount_out,
   output reg hsync_out,
   output reg hblnk_out,
   output reg [11:0] rgb_out,
@@ -30,7 +30,7 @@ localparam NEW_COLOR = 12'h8_4_8;
 reg [11:0] rgb_out_nxt;
 wire [5:0] addrx, addry;
 reg vsync_delay, hsync_delay, hblnk_delay, vblnk_delay;
-reg [10:0] vcount_delay, hcount_delay;
+reg [11:0] vcount_delay, hcount_delay;
 reg [11:0] rgb_delay;
 
 always @*

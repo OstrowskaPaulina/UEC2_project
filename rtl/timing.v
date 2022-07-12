@@ -9,10 +9,10 @@
 // using Verilog-2001 syntax.
 
 module timing (
-  output reg [10:0] vcount,
+  output reg [11:0] vcount,
   output reg vsync,
   output reg vblnk,
-  output reg [10:0] hcount,
+  output reg [11:0] hcount,
   output reg hsync,
   output reg hblnk,
   input wire pclk,
@@ -32,8 +32,8 @@ module timing (
   localparam VER_SYNC_START = 601;
   localparam VER_SYNC_TIME = 4;
  
-  reg [10:0] hcount_nxt;
-  reg [10:0] vcount_nxt;
+  reg [11:0] hcount_nxt;
+  reg [11:0] vcount_nxt;
   reg vblnk_nxt;
   reg vsync_nxt;
   reg hblnk_nxt;
