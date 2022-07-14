@@ -1,30 +1,41 @@
 `timescale 1 ns / 1 ps
 
-module draw_bug(
+module draw_start(
   input wire pclk,
   input wire reset,
+
+  input wire [11:0] rgb_in,
+  input wire [11:0] rgb_pixel,
+  input wire [11:0] x_bugpos,
+  input wire [11:0] y_bugpos,
+
   input wire [11:0] vcount_in,
   input wire vsync_in,
   input wire vblnk_in,
   input wire [11:0] hcount_in,
   input wire hsync_in,
   input wire hblnk_in,
-  input wire [11:0] rgb_in,
-  input wire [11:0] x_bugpos,
-  input wire [11:0] y_bugpos,
+
+
   output reg [11:0] vcount_out,
   output reg vsync_out,
   output reg vblnk_out,
   output reg [11:0] hcount_out,
   output reg hsync_out,
   output reg hblnk_out,
+
   output reg [11:0] rgb_out,
-  input wire [11:0] rgb_pixel,
   output wire [11:0] pixel_addr
 );
 
-localparam HEIGHT = 54;
-localparam WIDTH = 50;
+localparam PIC_HEIGHT = 53;
+localparam PIC_WIDTH = 54;
+localparam SCREEN_WIDTH = 800;
+localparam SCREEN_HEIGHT = 600;
+localparam LOW_V_COORD = ((SCREEN_HEIGHT/2) - (PIC_HEIGHT));
+localparam UP_V_COORD = ((SCREEN_HEIGHT/2) + (PIC_HEIGHT));
+localparam LOW_H_COORD = ((SCREEN_WIDTH/2) - (PIC_WIDTH));
+localparam UP_H_COORD  = ((SCREEN_WIDTH/2) + (PIC_WIDTH));
 
 reg [11:0] rgb_out_nxt;
 wire [5:0] addrx, addry;
@@ -36,7 +47,7 @@ always @*
 begin
     if((~vblnk_in) && (~hblnk_in))
     begin
-        if(((vcount_in >= y_bugpos) && (vcount_in < (HEIGHT + y_bugpos))) && ((hcount_in >= x_bugpos) && (hcount_in < (WIDTH + x_bugpos))))
+        if((vcount_in >= LOW_V_COORD) && (vcount_in < UP_V_COORD) && ((hcount_in >= LOW_H_COORD) && (hcount_in < UP_H_COORD)))
         begin
             rgb_out_nxt = rgb_pixel;
         end
@@ -94,6 +105,6 @@ always @(posedge pclk)
    
 assign addry = vcount_in - y_bugpos;
 assign addrx = hcount_in - x_bugpos;
-assign pixel_addr = addry * WIDTH + addrx;
+assign pixel_addr = addry * PIC_WIDTH + addrx;
 
 endmodule

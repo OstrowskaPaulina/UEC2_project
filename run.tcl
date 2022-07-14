@@ -41,7 +41,10 @@ proc create_new_project {project target top_module} {
     rtl/clock_rst.v
     rtl/mouse.v
     rtl/draw_bug.v
-    rtl/image_rom.v
+    rtl/draw_start.v
+    rtl/bug_rom.v
+    rtl/start_rom.v
+    rtl/screen_switch.v
     }
     
     # Specify vhdl design files location      -- EDIT
@@ -54,7 +57,8 @@ proc create_new_project {project target top_module} {
     
     # Specify files for memory initialization -- EDIT
     read_mem {
-        rtl/bug.dat
+    rtl/bug.dat
+    rtl/start.dat
     }
 
     # Specify simulation files location       -- EDIT
