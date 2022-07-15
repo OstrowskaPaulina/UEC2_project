@@ -90,7 +90,8 @@ module main (
   );
   
     wire [11:0] rgb_pixel_bug, rgb_pixel_start;
-    wire [11:0] addr_bug, addr_start;
+    wire [11:0] addr_bug;
+    wire [11:0] addr_start;
 
  bug_rom bug_rom(
      .clk(pclk),

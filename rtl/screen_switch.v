@@ -43,15 +43,13 @@ localparam PIC_HEIGHT = 53;
 localparam PIC_WIDTH = 54;
 localparam SCREEN_WIDTH = 800;
 localparam SCREEN_HEIGHT = 600;
-localparam LOW_V_COORD = ((SCREEN_HEIGHT/2) - (PIC_HEIGHT));
-localparam UP_V_COORD = ((SCREEN_HEIGHT/2) + (PIC_HEIGHT));
-localparam LOW_H_COORD = ((SCREEN_WIDTH/2) - (PIC_WIDTH));
-localparam UP_H_COORD  = ((SCREEN_WIDTH/2) + (PIC_WIDTH));
+localparam V_COORD = ((SCREEN_HEIGHT/2) - (PIC_HEIGHT/2));
+localparam H_COORD = ((SCREEN_WIDTH/2) - (PIC_WIDTH/2));
 
 
 always @*
 begin 
-    if(if_rst && ~(mouse_left && (ypos >= LOW_V_COORD) && (ypos < UP_V_COORD) && (xpos >= LOW_H_COORD) && (xpos < UP_H_COORD))) begin
+    if(if_rst && ~(mouse_left && (ypos >= V_COORD) && (ypos < V_COORD + PIC_HEIGHT) && (xpos >= H_COORD) && (xpos < H_COORD + PIC_WIDTH))) begin
         if_rst_nxt = if_rst;
         vcount_out_switch_nxt = vcount_out_start;
         vsync_out_switch_nxt = vsync_out_start;

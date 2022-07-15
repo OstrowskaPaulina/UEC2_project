@@ -32,10 +32,8 @@ localparam PIC_HEIGHT = 53;
 localparam PIC_WIDTH = 54;
 localparam SCREEN_WIDTH = 800;
 localparam SCREEN_HEIGHT = 600;
-localparam LOW_V_COORD = ((SCREEN_HEIGHT/2) - (PIC_HEIGHT));
-localparam UP_V_COORD = ((SCREEN_HEIGHT/2) + (PIC_HEIGHT));
-localparam LOW_H_COORD = ((SCREEN_WIDTH/2) - (PIC_WIDTH));
-localparam UP_H_COORD  = ((SCREEN_WIDTH/2) + (PIC_WIDTH));
+localparam V_COORD = ((SCREEN_HEIGHT/2) - (PIC_HEIGHT/2));
+localparam H_COORD = ((SCREEN_WIDTH/2) - (PIC_WIDTH/2));
 
 reg [11:0] rgb_out_nxt;
 wire [5:0] addrx, addry;
@@ -47,7 +45,7 @@ always @*
 begin
     if((~vblnk_in) && (~hblnk_in))
     begin
-        if((vcount_in >= LOW_V_COORD) && (vcount_in < UP_V_COORD) && ((hcount_in >= LOW_H_COORD) && (hcount_in < UP_H_COORD)))
+        if((vcount_in >= V_COORD) && (vcount_in < V_COORD + PIC_HEIGHT) && ((hcount_in >= H_COORD) && (hcount_in < H_COORD + PIC_WIDTH)))
         begin
             rgb_out_nxt = rgb_pixel;
         end
@@ -103,8 +101,8 @@ always @(posedge pclk)
     end
     end
    
-assign addry = vcount_in - y_bugpos;
-assign addrx = hcount_in - x_bugpos;
+assign addry = vcount_in - y_bugpos + V_COORD + (PIC_HEIGHT/2) + 2;
+assign addrx = hcount_in - x_bugpos + H_COORD + (PIC_WIDTH/2) -2;
 assign pixel_addr = addry * PIC_WIDTH + addrx;
 
 endmodule
