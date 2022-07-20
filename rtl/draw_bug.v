@@ -20,20 +20,28 @@ module draw_bug(
   output reg hblnk_out,
   output reg [11:0] rgb_out,
   input wire [11:0] rgb_pixel,
-  output wire [11:0] pixel_addr
+  output wire [11:0] pixel_addr,
+  input wire [1:0] rotation
 );
 
 localparam HEIGHT = 54;
-localparam WIDTH = 50;
-
+localparam WIDTH = 53;
+localparam NO_ROTATION = 2'b00,
+           ROTATE_90 = 2'b01,
+           ROTATE_270 = 2'b11,
+           ROTATE_180 = 2'b10;
+       
+           
 reg [11:0] rgb_out_nxt;
-wire [5:0] addrx, addry;
+reg [5:0] addrx, addry;
 reg vsync_delay, hsync_delay, hblnk_delay, vblnk_delay;
 reg [11:0] vcount_delay, hcount_delay;
 reg [11:0] rgb_delay;
 
+
+
 always @*
-begin
+begin    
     if((~vblnk_in) && (~hblnk_in))
     begin
         if(((vcount_in >= y_bugpos) && (vcount_in < (HEIGHT + y_bugpos))) && ((hcount_in >= x_bugpos) && (hcount_in < (WIDTH + x_bugpos))))
@@ -91,9 +99,33 @@ always @(posedge pclk)
         vcount_delay <= vcount_in;
     end
     end
-   
-assign addry = vcount_in - y_bugpos;
-assign addrx = hcount_in - x_bugpos;
+
+   always @*
+   begin
+   case(rotation)
+       NO_ROTATION:
+       begin
+            addrx = hcount_in - x_bugpos + 1;
+            addry = vcount_in - y_bugpos;     
+       end
+       ROTATE_90:
+       begin
+            addrx = vcount_in - y_bugpos;
+            addry = hcount_in - x_bugpos + 1;
+       end
+       ROTATE_180:
+       begin
+            addrx = WIDTH - 1 - (hcount_in - x_bugpos);
+            addry = HEIGHT - 1 - (vcount_in - y_bugpos);
+       end
+       ROTATE_270:
+       begin
+            addrx = WIDTH - (vcount_in - y_bugpos);
+            addry = HEIGHT - (hcount_in - x_bugpos + 2);
+       end
+   endcase
+   end
+
 assign pixel_addr = addry * WIDTH + addrx;
 
 endmodule

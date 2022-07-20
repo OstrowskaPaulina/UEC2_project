@@ -150,7 +150,11 @@ module main (
     .rgb_pixel(rgb_pixel_start),
     .pixel_addr(addr_start)
   );
+  
+  wire [11:0] x_bugpos_ctl, y_bugpos_ctl;
+  wire [1:0] rot;
 
+  
   draw_bug my_bug (
     .hcount_in(hcount_out_bg),
     .hsync_in(hsync_out_bg),
@@ -161,6 +165,7 @@ module main (
     .rgb_in(rgb_out_bg),
     .pclk(pclk),
     .reset(rst_lck),
+    .rotation(rot),
 
     .hcount_out(hcount_out_bug),
     .hsync_out(hsync_out_bug),
@@ -170,12 +175,23 @@ module main (
     .vblnk_out(vblnk_out_bug),
     .rgb_out(rgb_out_bug),
     
-    .x_bugpos(x_bugpos),
-    .y_bugpos(y_bugpos),
+    .x_bugpos(x_bugpos_ctl),
+    .y_bugpos(y_bugpos_ctl),
         
     .rgb_pixel(rgb_pixel_bug),
     .pixel_addr(addr_bug)
   );
+  
+
+  draw_bug_ctl my_bug_ctl(
+        .pclk(pclk),
+        .xpos(x_bugpos_ctl),
+        .ypos(y_bugpos_ctl),
+        .mouse_left(mouse_left),
+        .rotation(rot),
+        .rst(rst_lck)
+        );
+
 
   screen_switch my_screen_switch(
     .hcount_out_bug(hcount_out_bug),
