@@ -59,8 +59,7 @@ module main (
   wire vsync_out_bg, hsync_out_bg, vsync_out_bug, hsync_out_bug, vsync_out_disp, hsync_out_disp, vsync_out_start, hsync_out_start, vsync_out_switch, hsync_out_switch;
   wire vblnk_out_bg, hblnk_out_bg, vblnk_out_bug, hblnk_out_bug, vblnk_out_disp, hblnk_out_disp, vblnk_out_start, hblnk_out_start, vblnk_out_switch, hblnk_out_switch;
   wire [11:0] rgb_out_bg, rgb_out_bug, rgb_out_disp, rgb_out_start, rgb_out_switch;
-  wire [11:0] xpos, xpos_disp, ypos, ypos_disp;
-  wire [11:0] x_bugpos, y_bugpos;
+  wire [11:0] xpos, xpos_disp, ypos, ypos_disp, x_bugpos, y_bugpos;
 
   MouseCtl my_mousectl (
     .xpos(xpos),
@@ -125,6 +124,10 @@ module main (
     .reset(rst_lck)
   );
 
+  wire [11:0] x_bugpos_ctl, y_bugpos_ctl;
+  wire [1:0] rot;
+  wire bug_rst;
+
   draw_start my_start(
     .hcount_in(hcount_out_bg),
     .hsync_in(hsync_out_bg),
@@ -151,10 +154,6 @@ module main (
     .pixel_addr(addr_start)
   );
   
-  wire [11:0] x_bugpos_ctl, y_bugpos_ctl;
-  wire [1:0] rot;
-
-  
   draw_bug my_bug (
     .hcount_in(hcount_out_bg),
     .hsync_in(hsync_out_bg),
@@ -177,6 +176,9 @@ module main (
     
     .x_bugpos(x_bugpos_ctl),
     .y_bugpos(y_bugpos_ctl),
+    .xpos(xpos),
+    .ypos(ypos),
+    .mouse_left(mouse_left),
         
     .rgb_pixel(rgb_pixel_bug),
     .pixel_addr(addr_bug)
@@ -184,13 +186,13 @@ module main (
   
 
   draw_bug_ctl my_bug_ctl(
-        .pclk(pclk),
-        .xpos(x_bugpos_ctl),
-        .ypos(y_bugpos_ctl),
-        .mouse_left(mouse_left),
-        .rotation(rot),
-        .rst(rst_lck)
-        );
+    .pclk(pclk),
+    .xpos(x_bugpos_ctl),
+    .ypos(y_bugpos_ctl),
+    .mouse_left(mouse_left),
+    .rotation(rot),
+    .rst(rst_lck) 
+    );
 
 
   screen_switch my_screen_switch(
