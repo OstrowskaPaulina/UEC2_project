@@ -30,8 +30,8 @@ module draw_start(
 
 localparam PIC_HEIGHT = 53;
 localparam PIC_WIDTH = 54;
-localparam SCREEN_WIDTH = 800;
-localparam SCREEN_HEIGHT = 600;
+localparam SCREEN_WIDTH = 1024;
+localparam SCREEN_HEIGHT = 768;
 localparam V_COORD = ((SCREEN_HEIGHT/2) - (PIC_HEIGHT/2));
 localparam H_COORD = ((SCREEN_WIDTH/2) - (PIC_WIDTH/2));
 
@@ -101,8 +101,8 @@ always @(posedge pclk)
     end
     end
    
-assign addry = vcount_in - y_bugpos + V_COORD + (PIC_HEIGHT/2) + 2;
-assign addrx = hcount_in - x_bugpos + H_COORD + (PIC_WIDTH/2) -2;
+assign addry = vcount_in - y_bugpos + V_COORD + (PIC_HEIGHT) - 1;
+assign addrx = hcount_in - x_bugpos + H_COORD - (PIC_WIDTH/2) + 20;
 assign pixel_addr = addry * PIC_WIDTH + addrx;
 
 endmodule

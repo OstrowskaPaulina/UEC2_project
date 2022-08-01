@@ -41,8 +41,8 @@ reg if_rst, if_rst_nxt;
 
 localparam PIC_HEIGHT = 53;
 localparam PIC_WIDTH = 54;
-localparam SCREEN_WIDTH = 800;
-localparam SCREEN_HEIGHT = 600;
+localparam SCREEN_WIDTH = 1024;
+localparam SCREEN_HEIGHT = 768;
 localparam V_COORD = ((SCREEN_HEIGHT/2) - (PIC_HEIGHT/2));
 localparam H_COORD = ((SCREEN_WIDTH/2) - (PIC_WIDTH/2));
 

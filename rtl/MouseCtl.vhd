@@ -445,9 +445,9 @@ timeout  <= '1' when timeout_cnt = (TIMEOUT_PERIOD_CLOCKS - 1) else '0';
             -- if negative movement on x axis
             if(x_sign = '1') then
                -- if overflow occurred
-               if(x_overflow = '1') then
+               if(x_overflow = '1') then 
                   -- inc is -256
-                  inc := "111000000000";
+                  inc := "111000000000"; 
                else
                   -- inc is sign extended x_inc
                   inc := "1111" & x_inc;

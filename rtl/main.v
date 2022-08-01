@@ -5,9 +5,6 @@
 
 `timescale 1 ns / 1 ps
 
-// Declare the module and its ports. This is
-// using Verilog-2001 syntax.
-
 module main (
   input wire clk,
   input wire rst,
@@ -25,15 +22,17 @@ module main (
   wire pclk_mouse;
   wire locked;
   wire rst_lck;
+  wire rst_lck_in;
   wire mouse_left;
 
   clk_wiz_0 my_clock (
     .clk(clk),
-    .clk100MHz(pclk_mouse),
-    .clk40MHz(pclk),
+    .clk130MHz(pclk_mouse),
+    .clk65MHz(pclk),
     .reset(rst),
     .locked(locked)
   );
+
 
     clock_rst my_clock_rst (
      .pclk(pclk),
@@ -59,14 +58,14 @@ module main (
   wire vsync_out_bg, hsync_out_bg, vsync_out_bug, hsync_out_bug, vsync_out_disp, hsync_out_disp, vsync_out_start, hsync_out_start, vsync_out_switch, hsync_out_switch;
   wire vblnk_out_bg, hblnk_out_bg, vblnk_out_bug, hblnk_out_bug, vblnk_out_disp, hblnk_out_disp, vblnk_out_start, hblnk_out_start, vblnk_out_switch, hblnk_out_switch;
   wire [11:0] rgb_out_bg, rgb_out_bug, rgb_out_disp, rgb_out_start, rgb_out_switch;
-  wire [11:0] xpos, xpos_disp, ypos, ypos_disp, x_bugpos, y_bugpos;
+  wire [11:0] xpos_disp, ypos_disp, x_bugpos, y_bugpos, xpos, ypos;
 
   MouseCtl my_mousectl (
     .xpos(xpos),
     .ypos(ypos),
     .ps2_clk(ps2_clk),
     .ps2_data(ps2_data),
-    .clk(pclk_mouse),
+    .clk(pclk),
     .rst(rst_lck),
     .left(mouse_left),
 
@@ -76,6 +75,7 @@ module main (
     .setmax_x(1'b0),
     .setmax_y(1'b0)
   );
+
 
   timing my_timing (
     .vcount(vcount),
@@ -228,7 +228,7 @@ module main (
 );
 
   mouse mousedispl (
-    .pclk(pclk),
+    .pclk(pclk_mouse),
     .rst_lck(rst_lck),
     .vcount_in(vcount_out_switch),
     .vsync_in(vsync_out_switch),

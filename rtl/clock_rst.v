@@ -7,6 +7,7 @@ module clock_rst (
 );
 
 reg [3:0] counter, counter_nxt;
+reg rst_tmp;
 
 always @(*)
     begin
@@ -26,7 +27,8 @@ always @(posedge pclk or negedge locked)
     begin
         counter <= counter_nxt;
     end
-    rst_out <= counter[3];
-end
+    rst_tmp <= counter[3];
+    rst_out <= rst_tmp;
+    end
     
 endmodule

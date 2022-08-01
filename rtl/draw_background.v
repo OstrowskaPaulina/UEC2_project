@@ -29,11 +29,11 @@ reg [11:0] rgb_out_nxt;
       // Active display, top edge, make a yellow line.
       if (vcount_in == 0) rgb_out_nxt = 12'hf_f_0;
       // Active display, bottom edge, make a red line.
-      else if (vcount_in == 599) rgb_out_nxt = 12'hf_0_0;
+      else if (vcount_in == 767) rgb_out_nxt = 12'hf_0_0;
       // Active display, left edge, make a green line.
       else if (hcount_in == 0) rgb_out_nxt = 12'h0_f_0;
       // Active display, right edge, make a blue line.
-      else if (hcount_in == 799) rgb_out_nxt = 12'h0_0_f;
+      else if (hcount_in == 1023) rgb_out_nxt = 12'h0_0_f;
       // Active display, interior, fill with gray.
       // You will replace this with your own test.
 
