@@ -46,6 +46,7 @@ proc create_new_project {project target top_module} {
     rtl/start_rom.v
     rtl/screen_switch.v
     rtl/draw_bug_ctl.v
+    rtl/points_handler.v
     }
     
     # Specify vhdl design files location      -- EDIT

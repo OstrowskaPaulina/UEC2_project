@@ -15,7 +15,10 @@ module main (
   output wire [3:0] b,
   output wire pclk_mirror,
   inout ps2_clk,
-  inout ps2_data
+  inout ps2_data,
+
+  output wire [6:0] seg,
+  output wire [3:0] an
   );
 
   wire pclk;
@@ -154,6 +157,8 @@ module main (
     .pixel_addr(addr_start)
   );
   
+wire [3:0] points;
+  
   draw_bug my_bug (
     .hcount_in(hcount_out_bg),
     .hsync_in(hsync_out_bg),
@@ -181,9 +186,17 @@ module main (
     .mouse_left(mouse_left),
         
     .rgb_pixel(rgb_pixel_bug),
-    .pixel_addr(addr_bug)
+    .pixel_addr(addr_bug),
+    .points(points)
   );
   
+  points_handler my_points (
+    .pclk(pclk),
+    .rst(rst_lck),
+    .points(points),
+    .an(an),
+    .seg(seg)
+  );
 
   draw_bug_ctl my_bug_ctl(
     .pclk(pclk),

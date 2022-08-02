@@ -53,28 +53,65 @@ always@(posedge pclk)
             rotation_nxt <= rotation;
             end
     end
-    always@(*) begin
-        st_nxt = IDLE;
-        case (st)
-            IDLE:
-                begin
-                    xpos_nxt = xpos;                    
+    
+always@(*) begin
+    st_nxt = IDLE;
+    case (st)
+        IDLE:
+            begin
+                xpos_nxt = xpos;                    
+                ypos_nxt = ypos;
+                count_v_nxt = 0;
+                count_h_nxt = 0;
+                rotation_nxt = rotation;
+                st_nxt = mouse_left ? TOP : IDLE;
+            end
+        TOP:
+            begin
+                xpos_nxt = xpos;                    
+                ypos_nxt = ypos;
+                rotation_nxt = rotation;
+                count_v_nxt = count_v;
+                count_h_nxt = count_h;
+                st_nxt = RIGHT;
+            end
+        RIGHT:
+            begin
+                rotation_nxt=3;
+                count_h_nxt = (count_h + 1);
+                count_v_nxt = count_v;
+                if(count_h == 40000) begin
                     ypos_nxt = ypos;
-                    count_v_nxt = 0;
-                    count_h_nxt = 0;
-                    rotation_nxt = rotation;
-                    st_nxt = mouse_left ? TOP : IDLE;
+                    xpos_nxt = (xpos + 1);
                 end
-            TOP:
+                else
                 begin
-                    xpos_nxt = xpos;                    
+                    xpos_nxt = xpos;
                     ypos_nxt = ypos;
-                    rotation_nxt = rotation;
-                    count_v_nxt = count_v;
+                end          
+                
+                st_nxt = (xpos < 800 - WIDTH - 500) ? RIGHT : DOWN;
+                
+            end
+        DOWN:
+            begin
+                rotation_nxt=2;
+                    count_v_nxt = (count_v + 1);
                     count_h_nxt = count_h;
-                    st_nxt = RIGHT;
-                end
-            RIGHT:
+                    if(count_v == 40000) 
+                    begin
+                        xpos_nxt = xpos;
+                        ypos_nxt = (ypos + 1);
+                    end
+                else
+                begin
+                    xpos_nxt = xpos;
+                    ypos_nxt = ypos;
+
+                end          
+                st_nxt = (ypos < 600 - HEIGHT - 400) ? DOWN : RIGHT_1;
+            end
+            RIGHT_1:
                 begin
                     rotation_nxt=3;
                     count_h_nxt = (count_h + 1);
@@ -89,141 +126,105 @@ always@(posedge pclk)
                         ypos_nxt = ypos;
                     end          
                     
-                    st_nxt = (xpos < 800 - WIDTH - 500) ? RIGHT : DOWN;
+                    st_nxt = (xpos < 800 - WIDTH - 50) ? RIGHT_1 : DOWN_1;
                     
                 end
-            DOWN:
+            DOWN_1:
+                    begin
+                        rotation_nxt=2;
+                            count_v_nxt = (count_v + 1);
+                            count_h_nxt = count_h;
+                            if(count_v == 40000) 
+                            begin
+                                xpos_nxt = xpos;
+                                ypos_nxt = (ypos + 1);
+                            end
+                        else
+                        begin
+                            xpos_nxt = xpos;
+                            ypos_nxt = ypos;
+    
+                        end          
+                        st_nxt = (ypos < 600 - HEIGHT - 100) ? DOWN_1 : LEFT;
+                    end
+        LEFT:
                 begin
-                    rotation_nxt=2;
-                     count_v_nxt = (count_v + 1);
-                     count_h_nxt = count_h;
-                     if(count_v == 40000) 
-                     begin
-                         xpos_nxt = xpos;
-                         ypos_nxt = (ypos + 1);
-                     end
-                 else
-                 begin
-                     xpos_nxt = xpos;
-                     ypos_nxt = ypos;
-
-                 end          
-                 st_nxt = (ypos < 600 - HEIGHT - 400) ? DOWN : RIGHT_1;
+                    rotation_nxt=1;
+                    count_h_nxt = (count_h + 1);
+                    count_v_nxt = count_v;
+                    if(count_h == 40000) begin
+                        ypos_nxt = ypos;
+                        xpos_nxt = (xpos - 1);
+                    end
+                    else
+                    begin
+                        xpos_nxt = xpos;
+                        ypos_nxt = ypos;
+                    end          
+                    
+                    st_nxt = (xpos > 300) ? LEFT : UP;
+                    
                 end
-             RIGHT_1:
-                    begin
-                        rotation_nxt=3;
-                        count_h_nxt = (count_h + 1);
-                        count_v_nxt = count_v;
-                        if(count_h == 40000) begin
-                            ypos_nxt = ypos;
-                            xpos_nxt = (xpos + 1);
-                        end
-                        else
-                        begin
-                            xpos_nxt = xpos;
-                            ypos_nxt = ypos;
-                        end          
-                        
-                        st_nxt = (xpos < 800 - WIDTH - 50) ? RIGHT_1 : DOWN_1;
-                        
-                    end
-                DOWN_1:
-                        begin
-                            rotation_nxt=2;
-                             count_v_nxt = (count_v + 1);
-                             count_h_nxt = count_h;
-                             if(count_v == 40000) 
-                             begin
-                                 xpos_nxt = xpos;
-                                 ypos_nxt = (ypos + 1);
-                             end
-                         else
-                         begin
-                             xpos_nxt = xpos;
-                             ypos_nxt = ypos;
-        
-                         end          
-                         st_nxt = (ypos < 600 - HEIGHT - 100) ? DOWN_1 : LEFT;
-                        end
-            LEFT:
-                    begin
-                        rotation_nxt=1;
-                        count_h_nxt = (count_h + 1);
-                        count_v_nxt = count_v;
-                        if(count_h == 40000) begin
-                            ypos_nxt = ypos;
-                            xpos_nxt = (xpos - 1);
-                        end
-                        else
-                        begin
-                            xpos_nxt = xpos;
-                            ypos_nxt = ypos;
-                        end          
-                        
-                        st_nxt = (xpos > 300) ? LEFT : UP;
-                        
-                    end
-            UP:
+        UP:
+            begin
+                rotation_nxt=0;
+                count_v_nxt = (count_v + 1);
+                count_h_nxt = count_h;
+                if(count_v == 40000) 
                 begin
-                 rotation_nxt=0;
-                 count_v_nxt = (count_v + 1);
-                 count_h_nxt = count_h;
-                 if(count_v == 40000) 
-                 begin
-                     xpos_nxt = xpos;
-                     ypos_nxt = (ypos - 1);
-                 end
-             else
-             begin
-                 xpos_nxt = xpos;
-                 ypos_nxt = ypos;
+                    xpos_nxt = xpos;
+                    ypos_nxt = (ypos - 1);
+                end
+            else
+            begin
+                xpos_nxt = xpos;
+                ypos_nxt = ypos;
 
-             end          
-             st_nxt = (ypos > 300) ? UP : RIGHT_2;
-            end
-            
-            RIGHT_2:
-                    begin
-                        rotation_nxt=3;
-                        count_h_nxt = (count_h + 1);
-                        count_v_nxt = count_v;
-                        if(count_h == 40000) begin
-                            ypos_nxt = ypos;
-                            xpos_nxt = (xpos + 1);
-                        end
-                        else
-                        begin
-                            xpos_nxt = xpos;
-                            ypos_nxt = ypos;
-                        end          
-                        
-                        st_nxt = (xpos < 730) ? RIGHT_2 : GROUND;
-                        
+            end          
+            st_nxt = (ypos > 300) ? UP : RIGHT_2;
+        end
+        
+        RIGHT_2:
+                begin
+                    rotation_nxt=3;
+                    count_h_nxt = (count_h + 1);
+                    count_v_nxt = count_v;
+                    if(count_h == 40000) begin
+                        ypos_nxt = ypos;
+                        xpos_nxt = (xpos + 1);
                     end
-            
-            GROUND:
-            begin
-            xpos_nxt = 50;
-            ypos_nxt = 50;
-            count_v_nxt = 0;
-            count_h_nxt = 0;
-            rotation_nxt = rotation;
-            st_nxt = TOP; 
+                    else
+                    begin
+                        xpos_nxt = xpos;
+                        ypos_nxt = ypos;
+                    end          
+                    
+                    st_nxt = (xpos < 730) ? RIGHT_2 : GROUND;
+                    
+                end
+        
+        GROUND:
+        begin
+        xpos_nxt = 50;
+        ypos_nxt = 50;
+        count_v_nxt = 0;
+        count_h_nxt = 0;
+        rotation_nxt = rotation;
+        st_nxt = TOP; 
 
-            end
-            default:
-            begin
-            xpos_nxt = xpos;
-            ypos_nxt = ypos;
-            count_v_nxt = count_v;
-            count_h_nxt = count_h;
-            rotation_nxt = rotation;
-            st_nxt = st;
-            
-            end
-        endcase
-    end
+        end
+        default:
+        begin
+        xpos_nxt = xpos;
+        ypos_nxt = ypos;
+        count_v_nxt = count_v;
+        count_h_nxt = count_h;
+        rotation_nxt = rotation;
+        st_nxt = st;
+        
+        end
+    endcase
+end
     
 endmodule
 

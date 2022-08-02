@@ -29,7 +29,9 @@ module draw_bug(
   input wire [1:0] rotation,
   input wire [11:0] xpos,
   input wire [11:0] ypos,
-  input wire mouse_left
+  input wire mouse_left,
+
+  output reg [3:0] points
 
 );
 
@@ -46,24 +48,30 @@ reg [5:0] addrx, addry;
 reg vsync_delay, hsync_delay, hblnk_delay, vblnk_delay, vsync_delay1, hsync_delay1, hblnk_delay1, vblnk_delay1;
 reg [11:0] vcount_delay, hcount_delay, vcount_delay1, hcount_delay1;
 reg [11:0] rgb_delay;
-reg [19:0] counter, counter_nxt, counter_delay;
+reg [16:0] counter, counter_nxt, counter_delay;
+reg [3:0] points_nxt;
 
 
 
 always @*
 begin
     counter_nxt = counter;
+    points_nxt = points;
     if((~vblnk_in) && (~hblnk_in)) begin
         if(((vcount_in >= y_bugpos) && (vcount_in < (HEIGHT + y_bugpos))) && ((hcount_in >= x_bugpos) && (hcount_in < (WIDTH + x_bugpos)))) begin
             if(mouse_left && (ypos >= y_bugpos) && (ypos < (HEIGHT + y_bugpos)) && (xpos >= x_bugpos) && (xpos < (WIDTH + x_bugpos))) begin
                 counter_nxt = counter + 1;
                 rgb_out_nxt = 12'hf_f_f;
             end
-            else begin    
+            else begin
                 if(counter) begin
+                    if(counter == 50) begin
+                        points_nxt = points + 1;
+                    end
                     if(counter == 110000) begin
                         rgb_out_nxt = rgb_pixel;
                         counter_nxt = 0;
+                        points_nxt = points + 1;
                     end
                     else begin
                         rgb_out_nxt = 12'hf_f_f;
@@ -115,6 +123,7 @@ always @(posedge pclk)
         
         counter_delay <= 0;
         counter <= 0;
+        points <= 0;
     end
     else
     begin 
@@ -143,6 +152,7 @@ always @(posedge pclk)
 
         counter_delay <= counter_nxt;
         counter <= counter_delay;
+        points <= points_nxt;
     end
     end
 
